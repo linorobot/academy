@@ -186,15 +186,14 @@ def is_obstacle_detected(ranges, threshold=0.5):
     Returns:
         bool: True if an obstacle is detected, False otherwise.
     """
-    # The 'front' of the robot corresponds to the middle of the ranges array
     num_readings = len(ranges)
+    if num_readings == 0:
+        return False
+
     front_index = num_readings // 2
-
-    # Check a small window of readings around the front
     window = 10
-    front_readings = ranges[front_index - window : front_index + window]
+    front_readings = ranges[max(0, front_index - window): front_index + window]
 
-    # Filter out inf/nan values (no return = open space)
     valid_readings = [r for r in front_readings if r == r and r != float('inf')]
 
     if not valid_readings:
