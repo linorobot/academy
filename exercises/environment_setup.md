@@ -194,7 +194,7 @@ docker compose down
 
 ---
 
-## Summary
+## Useful Commands
 
 | Step | Command |
 |------|---------|
