@@ -13,8 +13,16 @@ Reference: [linorobot2 Docker documentation](https://linorobot.github.io/linorob
 ### Prerequisites
 
 - Docker and Docker Compose installed on your machine
-- The linorobot2 repository cloned locally
-- A terminal at the repository root
+- A terminal in the directory where you want to clone the repository
+
+### 1.0 - Clone the repository
+
+```bash
+git clone https://github.com/linorobot/linorobot2
+cd linorobot2
+```
+
+All subsequent steps assume your terminal is at the repository root (`linorobot2/`).
 
 ### 1.1 - Configure the Docker environment
 
@@ -181,6 +189,7 @@ docker compose down
 
 | Step | Command |
 |------|---------|
+| Clone | `git clone https://github.com/linorobot/linorobot2 && cd linorobot2` |
 | Configure | Edit `docker/.env`, set `BASE_IMAGE=gazebo` |
 | Build | `cd docker && ./build` |
 | Install Tmuxinator | `sudo apt install tmuxinator` |
