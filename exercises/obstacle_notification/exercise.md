@@ -11,8 +11,8 @@ So for your first task, we've already got an obstacle detection algorithm ready 
 Here's what you need to know to get started:
 
 - **Your task:** Integrate the provided obstacle detection algorithm with the robot's LIDAR sensor
-- **Notification topic:** `/obstacle_alert`
-- **Notification message type:** `std_msgs/msg/Bool`
+- **Required Notification Topic:** `/obstacle_alert`
+- **Required Notification Message Type:** `std_msgs/msg/Bool`
   - Publish `True` when an obstacle is within the threshold distance in front of the robot
   - Publish `False` when the path is clear
 - The robot has a LIDAR sensor - you'll need to figure out which topic it's publishing on and what message type it uses
