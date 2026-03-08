@@ -33,13 +33,16 @@ cd docker
 nano .env
 ```
 
-Set `BASE_IMAGE` to target Gazebo simulation:
+Set `BASE_IMAGE` based on your machine:
+
+- `gazebo` — for machines **without** an NVIDIA GPU
+- `gazebo-cuda` — for machines with a **CUDA-enabled NVIDIA GPU**
 
 ```
 BASE_IMAGE=gazebo
 ```
 
-If your machine has an NVIDIA GPU, use this instead for hardware-accelerated rendering:
+If your machine has an NVIDIA GPU with CUDA installed, use this instead for hardware-accelerated rendering:
 
 ```
 BASE_IMAGE=gazebo-cuda
@@ -114,7 +117,11 @@ Launch the dev profile:
 tmuxinator start dev
 ```
 
-This starts the `dev` container and a KasmVNC server, then opens a tmux window with four bash panes ready for development. Once everything is up, open your browser and go to:
+This starts the `dev` container and a KasmVNC server, then opens a tmux window with four bash panes ready for development.
+
+> **Tip:** The `linorobot2_ws/src` directory inside the container is a shared volume — it maps directly to the `linorobot2_ws/src` folder inside the cloned repository on your host machine. This means you can open and edit files from your host using your favourite IDE, and changes will be immediately visible inside the container without any copying or syncing.
+
+Once everything is up, open your browser and go to:
 
 ```
 http://<your_machine_ip>:3000

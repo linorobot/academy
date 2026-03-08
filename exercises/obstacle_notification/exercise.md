@@ -126,7 +126,7 @@ Once RViz is open:
 
 3. Find your LIDAR topic in the list and select its display type → click **OK**
 
-You should now see the laser scan visualized as a ring of dots around the robot. Move an obstacle close to the robot in Gazebo and watch the scan update in real time.
+You should now see the laser scan visualized as a ring of dots around the robot. If you look closely, the shape formed by the dots should resemble the silhouette of the simulated world in Gazebo — walls, objects, and obstacles will show up as clusters of points at their respective distances and angles. Move an obstacle close to the robot in Gazebo and watch the scan update in real time.
 
 > This is a great sanity check. If you see data here, your topic identification was correct.
 
@@ -143,11 +143,13 @@ Now it's time to write the node. You'll be creating a ROS 2 Python package from 
 
 ### 3.1 Create your package
 
-Navigate to your workspace source directory:
+Navigate to the linorobot2 directory inside your workspace source:
 
 ```bash
-cd ~/linorobot2_ws/src
+cd ~/linorobot2_ws/src/linorobot2
 ```
+
+> **Tip:** This directory is shared with your host machine. You can open `linorobot2_ws/src/linorobot2` in your favourite IDE on the host and any edits will be immediately visible inside the container.
 
 Create a new package called `obstacle_notification`:
 
@@ -162,7 +164,7 @@ ros2 pkg create --build-type ament_python obstacle_notification
 Navigate into the package:
 
 ```bash
-cd ~/linorobot2_ws/src/obstacle_notification/obstacle_notification
+cd ~/linorobot2_ws/src/linorobot2/obstacle_notification/obstacle_notification
 ```
 
 Create a new file called `obstacle_publisher.py` and open it in your editor.
@@ -262,7 +264,7 @@ if __name__ == '__main__':
 
 ### 3.3 Update package.xml
 
-Open `~/linorobot2_ws/src/obstacle_notification/package.xml` and add these three lines **after the existing `<buildtool_depend>` line**:
+Open `~/linorobot2_ws/src/linorobot2/obstacle_notification/package.xml` and add these three lines **after the existing `<buildtool_depend>` line**:
 
 ```xml
 <exec_depend>rclpy</exec_depend>
@@ -274,7 +276,7 @@ Open `~/linorobot2_ws/src/obstacle_notification/package.xml` and add these three
 
 ### 3.4 Register the entry point
 
-Open `~/linorobot2_ws/src/obstacle_notification/setup.py` and update the `console_scripts` list:
+Open `~/linorobot2_ws/src/linorobot2/obstacle_notification/setup.py` and update the `console_scripts` list:
 
 ```python
 entry_points={
@@ -287,6 +289,10 @@ entry_points={
 ---
 
 ### 3.5 Build and run
+
+`colcon build` is the standard build tool for ROS 2 workspaces. It compiles all packages in your `src/` directory and places the outputs under `install/`. The `--packages-select` flag lets you build only a specific package instead of rebuilding everything in the workspace — useful when you're iterating on a single package.
+
+After building, you **must** run `source install/setup.bash` before running your nodes. This script updates your shell's environment (e.g. `PYTHONPATH`, `AMENT_PREFIX_PATH`) so that ROS 2 can find the newly built package. Without sourcing it, `ros2 run` won't know your package exists.
 
 ```bash
 cd ~/linorobot2_ws
@@ -311,7 +317,7 @@ Now write a second node that **listens** to `/obstacle_alert` and reacts to the 
 
 ### 4.1 Create the subscriber file
 
-In the same package directory (`~/linorobot2_ws/src/obstacle_notification/obstacle_notification`), create `obstacle_subscriber.py`:
+In the same package directory (`~/linorobot2_ws/src/linorobot2/obstacle_notification/obstacle_notification`), create `obstacle_subscriber.py`:
 
 ```python
 import rclpy
