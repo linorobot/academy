@@ -63,8 +63,22 @@ Below is the structure of the action interface:
 
 ### Installation
 
-1. Create a workspace and clone the repository:
+1. Create a workspace and clone the repository
    ```bash
-   mkdir -p ~/nav_challenge_ws/src
-   cd ~/nav_challenge_ws/src
-   git clone <YOUR_REPO_URL_HERE> .
+   cd ~/linorobot2  # navigate to linorobot2 directory
+   git clone https://github.com/linorobot/academy.git 
+   cd ~/linorobot2/academy/challenges  # you can see the provided packages here
+   ```
+
+2. Make your modification
+   ```bash
+   cd ~/linorobot2/academy/challenges/navigation_waypoints_action/
+   ```
+
+4. Build and run (do it in your docker!)
+   ```bash
+   cd ~/linorobot2
+   colcon build
+   source install/setup.bash
+   # Run your tasks
+   ```
