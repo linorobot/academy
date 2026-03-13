@@ -43,3 +43,11 @@ Now that you are connected to your cloud computer:
 2.  **Skip the "Prerequisites"** (since we handled them in Phase 1).
 3.  Start at **Step 1.0 - Clone the repository**.
 4.  Proceed with building the image and starting the session.
+
+---
+
+## 📚 Reference Guides
+
+- **[Daily Workflow](daily_workflow.md):** ⚡ **Start here each day!** A quick checklist for daily development (Start/Stop VM, Connect, etc.).
+- **[GCP Connection Guide](gcp_connect.md):** Detailed instructions on connecting via Terminal or VS Code.
+- **[Docker Setup Guide](docker_setup.md):** Full setup instructions for the robot simulation environment.

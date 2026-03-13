@@ -2,35 +2,120 @@
 
 Now that your Cloud VM is running, you need a way to control it.
 
-We offer two ways to connect. **We strongly recommend Option 2** for the best experience.
+We offer three ways to connect:
 
 | Option | Best For... | Description |
 | :--- | :--- | :--- |
-| **Option 1: Quick Connect** | Quick fixes | Use the terminal in your browser. Fast, but hard to write code. |
-| **Option 2: VS Code** | **Writing Code** | Makes the cloud computer feel like it's on your laptop. Full file explorer, code completion, etc. |
+| **Option 1: Local Terminal** | **Robot Control** | The best experience for running commands. Supports `tmux`, `tmuxinator`, and shortcuts perfectly. |
+| **Option 2: VS Code** | **Writing Code** | Best for editing files. Full file explorer, code completion, etc. |
+| **Option 3: Quick Connect** | Quick fixes | Use the terminal in your browser. Fast, but hard to write code. |
 
 ---
 
-## Option 1: Quick Connect (Terminal)
+## Phase 1: Global Setup (Required for Option 1 & 2)
 
-This uses the "SSH Tunnel" method to securely forward the simulation viewer to your laptop.
+To use Option 1 (Terminal) or Option 2 (VS Code), you must first create a digital "key card" (SSH Key) on your laptop.
+
+**Step 1: Find your Username**
+1.  Go to the [GCP Cloud Shell](https://ssh.cloud.google.com/cloudshell).
+2.  Run the command `whoami`.
+3.  **Write this down.** This is your Linux username (e.g., `john_doe`). You MUST use this exact name so you can access your files.
+
+**Step 2: Generate an SSH Key**
+Open **PowerShell** (Windows) or **Terminal** (Mac/Linux) on your laptop and run:
+
+**Windows (PowerShell):**
+```powershell
+# Create the .ssh folder if it doesn't exist
+mkdir $HOME\.ssh -ErrorAction SilentlyContinue
+
+# Generate the key (Replace 'john_doe' with YOUR username)
+ssh-keygen -t rsa -f $HOME\.ssh\gcp_key -C "john_doe"
+```
+
+**macOS / Linux:**
+```bash
+# Create folder
+mkdir -p ~/.ssh
+
+# Generate key (Replace 'john_doe' with YOUR username)
+ssh-keygen -t rsa -f ~/.ssh/gcp_key -C "john_doe"
+```
+*(Press Enter twice to skip adding a password).*
+
+**Step 3: Upload the Key to Google**
+1.  Get the text of your public key:
+    *   **Windows:** `Get-Content $HOME\.ssh\gcp_key.pub`
+    *   **Mac/Linux:** `cat ~/.ssh/gcp_key.pub`
+2.  Copy the **entire output** (starts with `ssh-rsa`... ends with your username).
+3.  Go to [GCP Console -> Compute Engine -> VM Instances](https://console.cloud.google.com/compute/instances).
+4.  Click **Your VM Instance Name** -> **Edit** -> Scroll down and find SSH keys -> **Add Item**.
+5.  Paste your public key and click **Save**.
+
+---
+
+## Option 1: Local Terminal (Recommended for Robot Control)
+
+**Why use this?**
+Later in the course, we use `tmux` and `tmuxinator` to manage multiple robot programs. The Google Cloud Shell and VS Code terminal often capture standard shortcuts (like `Ctrl+W` or `Ctrl+B`) or have limited screen space, making these tools hard to use. A local terminal solves this.
+
+**Instructions:**
+
+1.  Find your VM's **External IP Address** in the GCP Console.
+2.  Open **PowerShell** (Windows) or **Terminal** (Mac/Linux).
+3.  Run the connection command (replace with your details):
+
+    **Windows (PowerShell):**
+    ```powershell
+    ssh -i $HOME\.ssh\gcp_key -L 3000:localhost:3000 YOUR_USERNAME@YOUR_VM_IP
+    ```
+
+    **macOS / Linux:**
+    ```bash
+    ssh -i ~/.ssh/gcp_key -L 3000:localhost:3000 YOUR_USERNAME@YOUR_VM_IP
+    ```
+
+    *Tip: The `-L 3000:localhost:3000` part ensures you can see the simulator in your browser at `http://localhost:3000`.*
+
+---
+
+## Option 2: VS Code Remote (Recommended for Coding)
+
+This setup allows you to use your local VS Code to edit files that are actually sitting on the Google Cloud Server.
+
+**Step 1: Install Extension**
+1.  Install **VS Code** on your laptop.
+2.  Open VS Code -> Extensions (Square icon on left).
+3.  Search for `Remote-SSH` (by Microsoft) and install it.
+
+**Step 2: Connect**
+1.  Find your VM's **External IP Address**.
+2.  In VS Code, press `F1` (or Ctrl+Shift+P) and type: `Remote-SSH: Connect to Host...`.
+3.  Select **Add New SSH Host...**
+4.  Enter this command (replace with your details):
+    ```bash
+    ssh -i ~/.ssh/gcp_key YOUR_USERNAME@YOUR_VM_IP
+    ```
+5.  Select the configuration file to save to (usually the first option).
+6.  Click **Connect**.
+7.  Select **Linux** if asked.
+
+You are now connected! Open Folder `/home/your_username/` to start coding.
+
+---
+
+## Option 3: Quick Connect (Browser Fallback)
+
+If you cannot set up the options above, use this method.
 
 1.  Open **Google Cloud Shell** (`>_` icon at [console.cloud.google.com](https://console.cloud.google.com)).
-2.  Copy and paste this "Magic Command". It detects your VM and connects:
+2.  Run the Magic Command:
 
 ```bash
 export PROJECT_ID=$(gcloud projects list --format='value(projectId)') && export ZONE=$(gcloud compute instances list --project=$PROJECT_ID --format='value(zone)') && export VM_NAME=$(gcloud compute instances list --project=$PROJECT_ID --format='value(name)') && export PORT=3000 && echo "PROJECT_ID: $PROJECT_ID" && echo "ZONE: $ZONE" && echo "VM_NAME: $VM_NAME" && echo "PORT: $PORT"
 ```
 
-It will output something like:
-```
-PROJECT_ID: development-vm-402010
-ZONE: asia-southeast1-b
-VM_NAME: my-vm
-PORT: 3000
-```
-
-### Step 3: SSH with Port Forwarding
+3.  Run the SSH tunnel command output by the previous step:
 
 ```bash
 gcloud compute ssh $VM_NAME \
@@ -40,77 +125,7 @@ gcloud compute ssh $VM_NAME \
   -- -L $PORT:localhost:$PORT
 ```
 
-3.  Once connected, you can open `http://localhost:3000` in your **local** Chrome/Edge browser to see the simulator (when it's running).
-
----
-
-## Option 2: VS Code Remote (Recommended) 🏆
-
-This setup allows you to use your local VS Code to edit files that are actually sitting on the Google Cloud Server.
-
-### Phase 1: Preparation (Do this once)
-
-**Step 1: Install Prerequisites**
-1.  Install **VS Code** on your laptop.
-2.  Open VS Code -> Extensions (Square icon on left).
-3.  Search for `Remote-SSH` (by Microsoft) and install it.
-
-**Step 2: Find your Username**
-1.  Go to the [GCP Cloud Shell](https://ssh.cloud.google.com/cloudshell).
-2.  Run the command `whoami`.
-3.  **Write this down.** This is your Linux username (e.g., `john_doe`). You MUST use this exact name so you can access your files.
-
-**Step 3: Generate an SSH Key Key**
-This creates a digital "key card" on your laptop to unlock the cloud computer.
-Open **PowerShell** (Windows) or **Terminal** (Mac/Linux) on your laptop and run:
-
-**Windows (PowerShell):**
-```powershell
-# Create the .ssh folder if it doesn't exist
-mkdir $HOME\.ssh -ErrorAction SilentlyContinue
-
-# Generate the key (Replace 'john_doe' with YOUR username from Step 2)
-ssh-keygen -t rsa -f $HOME\.ssh\gcp_key -C "john_doe"
-```
-
-**macOS / Linux:**
-```bash
-# Create folder
-mkdir -p ~/.ssh
-
-# Generate key (Replace 'john_doe' with YOUR username from Step 2)
-ssh-keygen -t rsa -f ~/.ssh/gcp_key -C "john_doe"
-```
-*(Press Enter twice to skip adding a password).*
-
-**Step 4: Upload the Key to Google**
-1.  Get the text of your public key:
-    *   **Windows:** `Get-Content $HOME\.ssh\gcp_key.pub`
-    *   **Mac/Linux:** `cat ~/.ssh/gcp_key.pub`
-2.  Copy the **entire output** (starts with `ssh-rsa`... ends with your username).
-3.  Go to [GCP Console -> Compute Engine -> VM Instances](https://console.cloud.google.com/compute/instances).
-4.  Click **Your VM Instance Name** -> **Edit** -> Scroll down and find SSH keys -> **Add Item**.
-5.  Paste your public key and click **Save**.
-
-### Phase 2: Connecting (Do this daily)
-
-1.  Find your VM's **External IP Address** (Go to [VM Instances page](https://console.cloud.google.com/compute/instances)).
-2.  Open **VS Code**.
-3.  Press `F1` (or Ctrl+Shift+P) and type: `Remote-SSH: Connect to Host...`.
-4.  Select **Add New SSH Host...**
-5.  Enter this command (replace with your details):
-    ```bash
-    ssh -i ~/.ssh/gcp_key YOUR_USERNAME@YOUR_VM_IP
-    ```
-    *(Example: `ssh -i ~/.ssh/gcp_key john_doe@34.12.123.44`)*
-6.  Select the configuration file to save to (usually the first option).
-7.  Click **Connect** on the popup (bottom right).
-8.  Select **Linux** as the platform.
-9.  Select **Continue** if asked about the fingerprint.
-
-You are now connected! The bottom-left corner of VS Code should show the IP address.
-
-🎉 **Success!** You will see a green bar at the bottom left showing the SSH connection. You can now Open Folder -> `/home/your_username/` to see your files.
+4.  Open `http://localhost:3000` in your browser.
 
 ---
 

@@ -134,28 +134,38 @@ tmuxinator projects:
 dev       hardware  sim
 ```
 
-### 2.2 - Start the dev session
+### 2.2 - Option A: Quick Launch / Verification (Recommended First)
 
-Launch the dev profile:
+Use the `sim` profile to quickly confirm your environment is set up correctly. This launches the robot in the Gazebo simulator automatically.
 
-> **Note:** This course uses the `dev` profile rather than `sim`. The `sim` profile
-> auto-launches a full Nav2 demo stack, whereas `dev` gives you four independent
-> bash panes so you can manually launch and control each ROS 2 process yourself.
+```bash
+tmuxinator start sim
+```
+
+This starts the simulation and a KasmVNC server. 
+
+Once running, open your browser and go to:
+- **Local / SSH Tunnel:** `http://localhost:3000`
+- **GCP Static IP:** `http://<YOUR_STATIC_IP>:3000`
+
+You will see the Gazebo simulation running in the browser window with a robot spawned in the world.
+
+To stop the simulation:
+Press `Ctrl+B` then type `:kill-session` and press `Enter` (or just close all terminals).
+
+---
+
+### 2.3 - Option B: Development Mode (For Exercises)
+
+For most exercises, we use the `dev` profile. This gives you 6 empty terminal panes so you can manually launch and control each ROS 2 process yourself.
 
 ```bash
 tmuxinator start dev
 ```
 
-This starts the `dev` container and a KasmVNC server, then opens a tmux window with four bash panes ready for development.
+> **Important:** This mode **does not** launch the simulation automatically. If you visit `http://localhost:3000`, you will see a blank desktop until you manually launch a GUI application (like Gazebo or Rviz) inside one of the panes.
 
 > **Tip:** The `linorobot2_ws/src` directory inside the container is a shared volume — it maps directly to the `linorobot2_ws/src` folder inside the cloned repository on your host machine. This means you can open and edit files from your host using your favourite IDE, and changes will be immediately visible inside the container without any copying or syncing.
-
-Once everything is up, open your browser and go to:
-
-- **Local / SSH Tunnel:** `http://localhost:3000`
-- **GCP Static IP:** `http://<YOUR_STATIC_IP>:3000`
-
-You will see the Gazebo simulation running in the browser window. A robot will be spawned in the world and ready to use. The tmux session opens 6 independent terminals you can use to follow the exercises in this repository.
 
 > **Note:** The first time you use any of the 6 terminals, remember to source the workspace:
 > ```bash
@@ -187,7 +197,7 @@ To reattach to a detached session:
 tmux attach -t dev
 ```
 
-### 2.3 - Verify the environment
+### 2.4 - Verify the environment
 
 In any free pane, confirm ROS 2 is active:
 

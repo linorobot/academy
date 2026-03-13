@@ -173,6 +173,8 @@ Now we will log into your new computer to install Docker.
     gcloud compute ssh $VM_NAME --zone=$ZONE --project=$PROJECT_ID
     ```
     *(If asked to create SSH keys, just press **Enter** (for Y) and **Enter** twice for no password)*
+    > If you get `Request had insufficient authentication scopes`, run `gcloud auth login` first and follow the instructions.
+
 
 2.  **Install Tools (Copy-Paste this Block into the VM terminal 🖥️):**
     
@@ -207,7 +209,7 @@ Now we will log into your new computer to install Docker.
 **You are paying by the second while this VM is running.**
 
 If you leave it running overnight, you will waste your free credits.
-**ALWAYS STOP YOUR VM WHEN YOU ARE DONE.**
+**ALWAYS STOP YOUR VM WHEN YOU ARE DONE USING IT.**
 
 **How to Stop:**
 *   **Web Console:** Go to Compute Engine -> VM Instances -> Select VM -> Click **STOP** (Square icon).
