@@ -1,6 +1,6 @@
-# 🤖 Autonomous Navigation Challenge
+# 🤖 Autonomous Navigation Mini Challenge
 
-Welcome to the Autonomous Navigation Challenge! In this repository, you will find the base workspace required to complete the integration of an Action Server with the Nav2 stack. 
+Welcome to the Autonomous Navigation Mini Challenge! In this repository, you will find the base workspace required to complete the integration of an Action Server with the Nav2 stack. 
 
 Your mission is to act as the systems integrator: build the "brain" of the robot to bridge high-level command requests with low-level navigation and mapping, utilizing a provided path-optimization algorithm.
 
@@ -18,7 +18,7 @@ Your mission is to act as the systems integrator: build the "brain" of the robot
 
 ## 📋 Overview
 
-You are provided with a complete base ROS 2 workspace. This includes an Action Client, predefined Action Interfaces, a base SLAM/Nav2 stack, and a custom waypoint optimization function. 
+You are provided with three ROS2 packages, including an Action Client, an Action Server, and a predefined Action Interface. You need to put these three packages into the existing [Linorobot2 Repo](https://github.com/linorobot/linorobot2/tree/jazzy) src to start.
 
 Your goal is to implement the **Action Server**, integrate the waypoint optimizer, and tune the **SLAM/Nav2 stack** so the robot can smoothly and efficiently execute the optimized route without violating physical constraints.
 
@@ -26,7 +26,7 @@ Your goal is to implement the **Action Server**, integrate the waypoint optimize
 
 ## 🏗️ System Architecture & Rules
 
-To ensure a level playing field, certain parts of the system are strictly locked. Focus your engineering efforts entirely on the Action Server logic and navigation tuning.
+To ensure a level playing field, certain parts of the system are strictly locked (Do Not Modify). Focus your engineering efforts entirely on the Action Server logic and navigation tuning.
 
 ### Modifiability Matrix
 
@@ -34,7 +34,7 @@ To ensure a level playing field, certain parts of the system are strictly locked
 | :--- | :---: | :--- |
 | **Action Client** | 🔒 **LOCKED** | Initiates the task and sends the goal. Do not modify. |
 | **Action Interfaces** | 🔒 **LOCKED** | The `.action` files defining the structure of the goal, feedback, and result. |
-| **Robot Physics/Kinematics** | 🔒 **LOCKED** | Start point, max/min velocity, acceleration, mass, and inertia. |
+| **Robot Physics/Kinematics** | 🔒 **LOCKED** | Start point, max/min velocity, acceleration, mass, inertia, and any other physics properties. |
 | **Action Server** | 🛠️ **MODIFIABLE** | **Your core deliverable.** Implement your state machine and logic here. |
 | **SLAM & Nav2 Stack** | 🛠️ **MODIFIABLE** | Tune parameters (costmaps, planners, inflation radii) to ensure efficient movement. |
 
@@ -44,30 +44,22 @@ To ensure a level playing field, certain parts of the system are strictly locked
 
 ## 🚀 Your Mission
 
-Your primary task is to write the Action Server node (`action_server_node.py` or `.cpp`) and tune the navigation stack configurations. 
+Your primary task is to modify the Action Server node (navwaypoints_server) and tune the navigation stack configurations. 
 
 Your Action Server must successfully:
-1. **Receive the Goal:** Accept the high-level task from the fixed Action Client.
+1. **Receive Goal & Send Feedback, Result:** Accept the goal from the fixed Action Client, and send back feedback and result.
 2. **Optimize the Route:** Pass the necessary target data into the provided **Waypoint Optimizer Function** to calculate the best sequence of waypoints.
-3. **Execute the Sequence:** Communicate the optimized waypoints sequentially to the Nav2 stack.
-4. **Manage State:** Monitor the robot's progress and handle potential navigation failures via SLAM/Nav2 feedback.
-5. **Return Feedback & Result:** Pipe standard progress feedback and the final completion result back to the Action Client using the locked Action Interfaces.
+3. **Execute the Sequence:** Communicate the waypoints sequentially to the Nav2 stack.
+4. **Return Feedback & Result:** Pipe standard progress feedback and the final completion result back to the Action Client using the locked Action Interfaces.
 
----
-
-## 🧰 Provided Tools
-
-* `waypoint_optimizer`: A library/function that calculates the most efficient sequence of waypoints to reach the destination. You must call this from your Action Server.
-* `nav_base_pkg`: The foundational SLAM and Nav2 configurations to get you started. (You are expected to tune the `.yaml` files in this package!)
+Below is the structure of the action interface:
+- Request: geometry_msgs/Point[4] waypoints (Array of exactly 4 coordinates for the 2D map)
+- Feedback: geometry_msgs/Point last_passed_waypoint (The latest coordinate the robot just passed through)
+- Result: int32 status (Server should send 1 when all coordinates are successfully completed)
 
 ---
 
 ## 💻 Getting Started
-
-### Prerequisites
-* Ubuntu 22.04
-* ROS 2 Humble
-* Nav2 Stack (`sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup`)
 
 ### Installation
 
