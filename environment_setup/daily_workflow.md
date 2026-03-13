@@ -51,15 +51,33 @@ Use this for writing code.
     cd ~/linorobot2/docker
     ```
 
-2.  **Choose your mode:**
+2.  **Register Tmux Profiles:** (Required every time)
+    ```bash
+    source setup_tmux.bash
+    ```
+
+3.  **Choose your mode:**
 
     | Mode | Command | Best For... |
     | :--- | :--- | :--- |
     | **Quick Launch** | `tmuxinator start sim` | Verify the setup. Automatically launches the robot & world. |
-    | **Development** | `tmuxinator start dev` | **Class Exercises.** Givens you empty terminals to run commands yourself. |
+    | **Development** | `tmuxinator start dev` | **Class Exercises.** Gives you empty terminals to run commands yourself. |
 
-3.  **View the Simulation:**
+4.  **View the Simulation:**
     Open [http://localhost:3000](http://localhost:3000) in your web browser.
+
+This setup uses **tmux** (terminal multiplexer). Here are the essential commands:
+
+| Action | Key Binding |
+| :--- | :--- |
+| **Move between panes** | `Ctrl+B` then `Arrow Keys` (Note: Often unreliable in VS Code) |
+| **Switch pane by number** | `Ctrl+B` then `q` then `Pane Number` (Recommended for VS Code) |
+| **Close current pane** | `Ctrl+D` (or type `exit`) |
+| **Detach session** (keep running) | `Ctrl+B` then `D` |
+| **Scroll Mode** (view history) | `Ctrl+B` then `[` (Use arrows/PgUp/PgDn, press `q` to exit) |
+| **Zoom Pane** (maximize/restore) | `Ctrl+B` then `z` |
+
+💡 **Pro Tip:** If your terminal seems frozen, check if you accidentally pressed `Ctrl+S` (flow control off). Press `Ctrl+Q` to unfreeze it.
 
 ---
 
