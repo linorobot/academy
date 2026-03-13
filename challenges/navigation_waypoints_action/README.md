@@ -1,9 +1,5 @@
 # 🤖 Autonomous Navigation Challenge
 
-![ROS2](https://img.shields.io/badge/ROS_2-Humble-blue.svg)
-![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
-
 Welcome to the Autonomous Navigation Challenge! In this repository, you will find the base workspace required to complete the integration of an Action Server with the Nav2 stack. 
 
 Your mission is to act as the systems integrator: build the "brain" of the robot to bridge high-level command requests with low-level navigation and mapping, utilizing a provided path-optimization algorithm.
